@@ -4,14 +4,24 @@ from sklearn.svm import SVC
 from collections import Counter
 from sklearn.metrics import accuracy_score
 from matplotlib import pyplot as plt
-
+from sklearn.model_selection import KFold
 
 svm = SVC()
 cnt = Counter()
 data = pd.read_csv("test_data.csv")
 main_attribute = ["credit_policy", "purpose","int.rate", "installment", "log.annual.inc", "dti","fico", "days.with.cr.line", "revol.bal", "revol.util", "inq.last.6mths", "delinq.2yrs", "pub.rec", "paid_stat"]
 datas = pd.DataFrame(data, columns=main_attribute)
-
+np_array = datas.as_matrix(columns=main_attribute)
+np_array = datas.values
+kf = KFold(n_splits=2)
+kf.get_n_splits(datas)
+print(kf)
+KFold(n_splits=2, random_state=None, shuffle=False)
+for train_index, test_index in kf.split(np_array):
+    print("Train:", train_index)
+    print("Test:",test_index)
+    X_train, X_test = np_array[train_index], np_array[test_index]
+    y_train, y_test = np_array[train_index], np_array[test_index]
 for i in datas['purpose']:
     cnt[i] += 1
 k = 0
